@@ -20,7 +20,7 @@ abstract class Invoice
         $configs = require(dirname(__DIR__).'/config.php');
 
         if (empty($configs[$paymentName]))
-            throw new \Exception('Zero\Invoice::[invoice config is empty]');
+            throw new \Exception('Zero\Invoice::[Invoice config is empty]');
 
         $this->setConfig($configs[$paymentName]);
     }

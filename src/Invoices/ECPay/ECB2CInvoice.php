@@ -149,7 +149,7 @@ class ECB2CInvoice extends ECInvoice
     public function encrypt($data)
     {
         if (openssl_cipher_iv_length('aes-128-cbc') !== strlen($this->hashIv)) {
-            throw new \LogicException('hash iv is not valid');
+            throw new \LogicException('Hash iv is not valid');
         }
 
         return openssl_encrypt($this->addPadding(urlencode(json_encode($data))), 'aes-128-cbc', $this->hashKey, OPENSSL_ZERO_PADDING, $this->hashIv);
@@ -163,7 +163,7 @@ class ECB2CInvoice extends ECInvoice
     public function decrypt($encrypted)
     {
         if (openssl_cipher_iv_length('aes-128-cbc') !== strlen($this->hashIv)) {
-            throw new \LogicException('hash iv is not valid');
+            throw new \LogicException('Hash iv is not valid');
         }
 
         return json_decode(urldecode($this->stripPadding(openssl_decrypt($encrypted, 'aes-128-cbc', $this->hashKey, OPENSSL_ZERO_PADDING, $this->hashIv))), true);
@@ -203,6 +203,6 @@ class ECB2CInvoice extends ECInvoice
             return $string;
         }
 
-        throw new \Exception("bad hashed string $string");
+        throw new \Exception("Bad hashed string $string");
     }
 }

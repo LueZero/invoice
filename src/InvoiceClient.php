@@ -45,7 +45,7 @@ class InvoiceClient
         }
 
         if (is_null($ecInvoice))
-            throw new \Exception('Zero\Invoice::[no ec invoice class]');
+            throw new \Exception('Zero\Invoice::[No ec invoice class]');
 
         return $ecInvoice;
     }
