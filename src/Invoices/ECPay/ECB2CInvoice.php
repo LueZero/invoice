@@ -4,7 +4,6 @@ namespace Zero\Invoices\ECPay;
 
 use Zero\Invoices\ECPay\ECInvoice;
 use Zero\Invoices\ECPay\Requests\Parameters\Base;
-use WpOrg\Requests\Requests;
 
 class ECB2CInvoice extends ECInvoice
 {
@@ -27,6 +26,12 @@ class ECB2CInvoice extends ECInvoice
     private $allowanceInvalidURL;
 
     /**
+     * @var string
+     * allowanceInvalidByCollegiate URL
+     */
+    private $allowanceInvalidByCollegiateURL;
+
+    /**
      * @var string  
      * allowance URL
      */
@@ -39,6 +44,36 @@ class ECB2CInvoice extends ECInvoice
     private $allowanceByCollegiateURL;
 
     /**
+     * @var string
+     * getIssue URL
+     */
+    private $getIssueURL;
+
+    /**
+     * @var string
+     * getInvalid URL
+     */
+    private $getInvalidURL;
+
+    /**
+     * @var string
+     * getAllowanceList URL
+     */
+    private $getAllowanceListURL;
+
+    /**
+     * @var string
+     * getAllowanceInvalid URL
+     */
+    private $getAllowanceInvalidURL;
+
+    /**
+     * @var string
+     * getInvoiceWordSetting URL
+     */
+    private $getInvoiceWordSettingURL;
+
+    /**
      * @param array configs 
      */
     public function __construct()
@@ -47,8 +82,14 @@ class ECB2CInvoice extends ECInvoice
         $this->issueURL = $this->configs['B2C']['invoiceURLs']['issue'];
         $this->invalidURL = $this->configs['B2C']['invoiceURLs']['invalid'];
         $this->allowanceInvalidURL = $this->configs['B2C']['invoiceURLs']['allowanceInvalid'];
+        $this->allowanceInvalidByCollegiateURL = $this->configs['B2C']['invoiceURLs']['allowanceInvalidByCollegiate'];
         $this->allowanceURL = $this->configs['B2C']['invoiceURLs']['allowance'];
         $this->allowanceByCollegiateURL = $this->configs['B2C']['invoiceURLs']['allowanceByCollegiate'];
+        $this->getIssueURL = $this->configs['B2C']['invoiceURLs']['getIssue'];
+        $this->getInvalidURL = $this->configs['B2C']['invoiceURLs']['getInvalid'];
+        $this->getAllowanceListURL = $this->configs['B2C']['invoiceURLs']['getAllowanceList'];
+        $this->getAllowanceInvalidURL = $this->configs['B2C']['invoiceURLs']['getAllowanceInvalid'];
+        $this->getInvoiceWordSettingURL = $this->configs['B2C']['invoiceURLs']['getInvoiceWordSetting'];
     }
 
     /**
@@ -57,16 +98,7 @@ class ECB2CInvoice extends ECInvoice
      */
     public function createIssue(Base $issue)
     {
-        $sendData = array_filter((array) $issue);
-        $sendData['Data'] = $this->encrypt($sendData['Data']);
-        $response = Requests::post($this->baseURL . $this->issueURL, [
-            'Content-Type: application/json',
-        ], json_encode($sendData));
-
-        $result = json_decode($response->body, true);
-        $result['Data'] = $this->decrypt($result['Data']);
-
-        return json_encode($result, true);
+        return $this->post($this->issueURL, $issue);
     }
 
     /**
@@ -75,16 +107,7 @@ class ECB2CInvoice extends ECInvoice
      */
     public function createInvalid(Base $invalid)
     {
-        $sendData = array_filter((array) $invalid);
-        $sendData['Data'] = $this->encrypt($sendData['Data']);
-        $response = Requests::post($this->baseURL . $invalid, [
-            'Content-Type: application/json',
-        ], json_encode($sendData));
-
-        $result = json_decode($response->body, true);
-        $result['Data'] = $this->decrypt($result['Data']);
-
-        return json_encode($result, true);
+        return $this->post($this->invalidURL, $invalid);
     }
 
     /**
@@ -93,16 +116,7 @@ class ECB2CInvoice extends ECInvoice
      */
     public function createAllowanceInvalid(Base $allowanceInvalid)
     {
-        $sendData = array_filter((array) $allowanceInvalid);
-        $sendData['Data'] = $this->encrypt($sendData['Data']);
-        $response = Requests::post($this->baseURL . $this->allowanceInvalidURL, [
-            'Content-Type: application/json',
-        ], json_encode($sendData));
-
-        $result = json_decode($response->body, true);
-        $result['Data'] = $this->decrypt($result['Data']);
-
-        return json_encode($result, true);
+        return $this->post($this->allowanceInvalidURL, $allowanceInvalid);
     }
 
     /**
@@ -111,16 +125,7 @@ class ECB2CInvoice extends ECInvoice
      */
     public function createAllowance(Base $allowance)
     {
-        $sendData = array_filter((array) $allowance);
-        $sendData['Data'] = $this->encrypt($sendData['Data']);
-        $response = Requests::post($this->baseURL . $this->allowanceURL, [
-            'Content-Type: application/json',
-        ], json_encode($sendData));
-
-        $result = json_decode($response->body, true);
-        $result['Data'] = $this->decrypt($result['Data']);
-
-        return json_encode($result, true);
+        return $this->post($this->allowanceURL, $allowance);
     }
 
     /**
@@ -129,16 +134,61 @@ class ECB2CInvoice extends ECInvoice
      */
     public function createAllowanceByCollegiate(Base $allowanceByCollegiate)
     {
-        $sendData = array_filter((array) $allowanceByCollegiate);
-        $sendData['Data'] = $this->encrypt($sendData['Data']);
-        $response = Requests::post($this->baseURL . $this->allowanceByCollegiateURL, [
-            'Content-Type: application/json',
-        ], json_encode($sendData));
+        return $this->post($this->allowanceByCollegiateURL, $allowanceByCollegiate);
+    }
 
-        $result = json_decode($response->body, true);
-        $result['Data'] = $this->decrypt($result['Data']);
+    /**
+     * @param AllowanceInvalid allowanceInvalidByCollegiate
+     * @return array
+     */
+    public function createAllowanceInvalidByCollegiate(Base $allowanceInvalidByCollegiate)
+    {
+        return $this->post($this->allowanceInvalidByCollegiateURL, $allowanceInvalidByCollegiate);
+    }
 
-        return json_encode($result, true);
+    /**
+     * @param Base $issue
+     * @return array
+     */
+    public function getIssue(Base $issue)
+    {
+        return $this->post($this->getIssueURL, $issue);
+    }
+
+    /**
+     * @param Base $invalid
+     * @return array
+     */
+    public function getInvalid(Base $invalid)
+    {
+        return $this->post($this->getInvalidURL, $invalid);
+    }
+
+    /**
+     * @param Base $allowance
+     * @return array
+     */
+    public function getAllowanceList(Base $allowance)
+    {
+        return $this->post($this->getAllowanceListURL, $allowance);
+    }
+
+    /**
+     * @param Base $allowanceInvalid
+     * @return array
+     */
+    public function getAllowanceInvalid(Base $allowanceInvalid)
+    {
+        return $this->post($this->getAllowanceInvalidURL, $allowanceInvalid);
+    }
+
+    /**
+     * @param Base $wordSetting
+     * @return array
+     */
+    public function getInvoiceWordSetting(Base $wordSetting)
+    {
+        return $this->post($this->getInvoiceWordSettingURL, $wordSetting);
     }
 
     /**

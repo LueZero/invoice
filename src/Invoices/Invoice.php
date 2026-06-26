@@ -30,7 +30,7 @@ abstract class Invoice
      */
     public function setConfig(array $configs)
     {
-        $this->$configs = $configs;
+        $this->configs = $configs;
     }
 
     /**

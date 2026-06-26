@@ -1,5 +1,6 @@
 {
     "name": "zero/invoice",
+    "description": "A lightweight PHP invoice integration package that supports multiple invoice vendors.",
     "version": "1.0",
     "require": {
         "php": ">=7.0.0",

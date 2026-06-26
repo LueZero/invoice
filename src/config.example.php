@@ -9,13 +9,13 @@ return [
         ],
         'B2B' => [
             'invoiceURLs' => [
-                'baseRUL' => 'https://einvoice-stage.ecpay.com.tw/B2BInvoice'
+                'baseURL' => 'https://einvoice-stage.ecpay.com.tw/B2BInvoice'
             ]
         ],
         'B2C' => [
             'invoiceURLs' => [
                 'baseURL' => 'https://einvoice-stage.ecpay.com.tw/B2CInvoice',
-                'issue' => '/issue',
+                'issue' => '/Issue',
                 'invalid' => '/Invalid',
                 'allowanceInvalid' => '/AllowanceInvalid',
                 'allowanceInvalidByCollegiate' => '/AllowanceInvalidByCollegiate',
