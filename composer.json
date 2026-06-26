@@ -1,7 +1,7 @@
 {
     "name": "zero/invoice",
     "description": "A lightweight PHP invoice integration package that supports multiple invoice vendors.",
-    "version": "1.0",
+    "license": "MIT",
     "require": {
         "php": ">=7.0.0",
         "rmccue/requests": "^2.0"
